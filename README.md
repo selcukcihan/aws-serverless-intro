@@ -1,5 +1,7 @@
 # AWS Basics & Serverless on AWS
 
+You can view the slides on https://docs.google.com/presentation/d/1yczZrcitxcGnT5NR1Ivt0V8lPDY0-084L097qhDTKuA/edit?usp=sharing
+
 We'll use these services to create a demo application, while learning how to build serverless solutions on AWS.
 
 - S3
