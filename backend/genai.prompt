@@ -1,0 +1,28 @@
+Write the meanings of "{INSERT_WORD_HERE}" in Turkish.
+Provide no more than 3 meanings.
+For each meaning, write an example usage of the word in English, with an explanation of its usage in Turkish.
+
+I expect a json file as output, in this format:
+
+For the word "adhere":
+
+{
+    "word": "adhere",
+    "meanings": [
+        "Yapışmak",
+        "Bağlı olmak"
+    ],
+    "examples": [
+        {
+            "usage": "Glue won't adhere to any surface that's wet.",
+            "explanation": "Burada adhere, yapışmak anlamında kullanılmış."
+        },
+        {
+            "usage": "I do not adhere to any organized religion",
+            "explanation": "Herhangi bir dine bağlı olmadığını belirtirken adhere kelimesini kullanmış.
+        }
+    ]
+}
+
+The response should only contain a valid json, without any delimiters or triple backticks for formatting like in markdown.
+I only want the output to be valid json, which can be parsed by any json deserializer.
