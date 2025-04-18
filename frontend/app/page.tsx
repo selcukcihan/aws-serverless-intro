@@ -23,12 +23,10 @@ interface Word {
 }
 
 interface DetailedWord extends Word {
-  dateAdded: string
-  usages: {
-    sentence: string
+  examples: {
+    usage: string
     explanation: string
   }[]
-  link: string
 }
 
 export default function DictionaryApp() {
@@ -74,16 +72,20 @@ export default function DictionaryApp() {
   // Handle word selection
   const handleWordClick = async (word: string) => {
     setIsLoading(true)
-
-    // Simulate API call to fetch word details
-    setTimeout(() => {
-      const wordDetail = sampleWordDetails.find((detail) => detail.word === word)
-      if (wordDetail) {
-        setSelectedWord(wordDetail)
-        setIsDetailOpen(true)
+    try {
+      const response = await fetch(`https://wvehuw4cld.execute-api.us-east-1.amazonaws.com/dev/words?word=${encodeURIComponent(word)}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch word details')
       }
+      const wordDetail = await response.json()
+      setSelectedWord(wordDetail)
+      setIsDetailOpen(true)
+    } catch (error) {
+      console.error('Error fetching word details:', error)
+      // You might want to show an error message to the user here
+    } finally {
       setIsLoading(false)
-    }, 500)
+    }
   }
 
   // Generate pagination items
@@ -260,117 +262,107 @@ const sampleWordDetails: DetailedWord[] = [
   {
     word: "Abate",
     meanings: ["Azalmak", "Hafiflemek", "Yatışmak"],
-    dateAdded: "2023-05-15",
-    usages: [
+    examples: [
       {
-        sentence: "The storm began to abate as the evening approached.",
+        usage: "The storm began to abate as the evening approached.",
         explanation:
           "Fırtına akşama doğru hafiflemeye başladı. Burada 'abate' kelimesi bir doğa olayının şiddetinin azalması anlamında kullanılmış.",
       },
       {
-        sentence: "His anger abated after he took a few deep breaths.",
+        usage: "His anger abated after he took a few deep breaths.",
         explanation:
           "Birkaç derin nefes aldıktan sonra öfkesi yatıştı. Burada 'abate' kelimesi bir duygunun yoğunluğunun azalması anlamında kullanılmış.",
       },
       {
-        sentence: "The government introduced new measures to abate pollution.",
+        usage: "The government introduced new measures to abate pollution.",
         explanation:
           "Hükümet kirliliği azaltmak için yeni önlemler getirdi. Burada 'abate' kelimesi bir sorunu azaltmak veya hafifletmek anlamında kullanılmış.",
       },
     ],
-    link: "https://dictionary.cambridge.org/dictionary/english/abate",
   },
   {
     word: "Benevolent",
     meanings: ["Hayırsever", "İyi niyetli"],
-    dateAdded: "2023-05-16",
-    usages: [
+    examples: [
       {
-        sentence: "The benevolent donor gave millions to the charity.",
+        usage: "The benevolent donor gave millions to the charity.",
         explanation:
           "Hayırsever bağışçı, hayır kurumuna milyonlarca para bağışladı. Burada 'benevolent' kelimesi cömert ve yardımsever bir kişiyi tanımlamak için kullanılmış.",
       },
       {
-        sentence: "She had a benevolent smile that made everyone feel welcome.",
+        usage: "She had a benevolent smile that made everyone feel welcome.",
         explanation:
           "Herkesi kendini hoş karşılanmış hissettiren iyi niyetli bir gülümsemesi vardı. Burada 'benevolent' kelimesi sıcak ve iyi niyetli bir ifadeyi tanımlamak için kullanılmış.",
       },
       {
-        sentence: "The king was known for his benevolent rule over the kingdom.",
+        usage: "The king was known for his benevolent rule over the kingdom.",
         explanation:
           "Kral, krallık üzerindeki hayırsever yönetimiyle tanınırdı. Burada 'benevolent' kelimesi adil ve iyi niyetli bir yönetim tarzını tanımlamak için kullanılmış.",
       },
     ],
-    link: "https://dictionary.cambridge.org/dictionary/english/benevolent",
   },
   {
     word: "Cacophony",
     meanings: ["Kakofoni", "Gürültü", "Ses karmaşası"],
-    dateAdded: "2023-05-17",
-    usages: [
+    examples: [
       {
-        sentence: "The cacophony of the city streets made it difficult to hear the phone ring.",
+        usage: "The cacophony of the city streets made it difficult to hear the phone ring.",
         explanation:
           "Şehir sokaklarının kakofonisi (gürültüsü), telefon çalışını duymayı zorlaştırdı. Burada 'cacophony' kelimesi rahatsız edici ve karışık sesler için kullanılmış.",
       },
       {
-        sentence: "A cacophony of voices filled the room as everyone tried to speak at once.",
+        usage: "A cacophony of voices filled the room as everyone tried to speak at once.",
         explanation:
           "Herkes aynı anda konuşmaya çalışırken odayı bir ses kakofonisi (karmaşası) doldurdu. Burada 'cacophony' kelimesi birbiriyle çakışan ve anlaşılmaz hale gelen sesler için kullanılmış.",
       },
       {
-        sentence: "The orchestra produced a cacophony of sound during their warm-up.",
+        usage: "The orchestra produced a cacophony of sound during their warm-up.",
         explanation:
           "Orkestra ısınma sırasında bir ses kakofonisi üretti. Burada 'cacophony' kelimesi uyumsuz ve düzensiz müzikal sesler için kullanılmış.",
       },
     ],
-    link: "https://dictionary.cambridge.org/dictionary/english/cacophony",
   },
   {
     word: "Diligent",
     meanings: ["Çalışkan", "Gayretli", "Özenli"],
-    dateAdded: "2023-05-18",
-    usages: [
+    examples: [
       {
-        sentence: "She was a diligent student who always completed her assignments on time.",
+        usage: "She was a diligent student who always completed her assignments on time.",
         explanation:
           "O, ödevlerini her zaman zamanında tamamlayan çalışkan bir öğrenciydi. Burada 'diligent' kelimesi sorumluluklarını titizlikle yerine getiren birini tanımlamak için kullanılmış.",
       },
       {
-        sentence: "His diligent research led to a major breakthrough in the field.",
+        usage: "His diligent research led to a major breakthrough in the field.",
         explanation:
           "Onun özverili araştırması, alanda büyük bir atılıma yol açtı. Burada 'diligent' kelimesi dikkatli ve sürekli çaba gösteren bir çalışma tarzını tanımlamak için kullanılmış.",
       },
       {
-        sentence: "The detective was diligent in following every lead in the case.",
+        usage: "The detective was diligent in following every lead in the case.",
         explanation:
           "Dedektif, davadaki her ipucunu takip etmekte özenli davrandı. Burada 'diligent' kelimesi titiz ve detaylı bir çalışma yaklaşımını tanımlamak için kullanılmış.",
       },
     ],
-    link: "https://dictionary.cambridge.org/dictionary/english/diligent",
   },
   {
     word: "Ephemeral",
     meanings: ["Geçici", "Kısa ömürlü", "Fani"],
-    dateAdded: "2023-05-19",
-    usages: [
+    examples: [
       {
-        sentence: "The beauty of cherry blossoms is ephemeral, lasting only a few days.",
+        usage: "The beauty of cherry blossoms is ephemeral, lasting only a few days.",
         explanation:
           "Kiraz çiçeklerinin güzelliği, sadece birkaç gün süren, geçicidir. Burada 'ephemeral' kelimesi çok kısa süren doğal bir güzelliği tanımlamak için kullanılmış.",
       },
       {
-        sentence: "Fame can be ephemeral, especially in the age of social media.",
+        usage: "Fame can be ephemeral, especially in the age of social media.",
         explanation:
           "Şöhret, özellikle sosyal medya çağında geçici olabilir. Burada 'ephemeral' kelimesi kalıcı olmayan, hızla gelip geçen bir durumu tanımlamak için kullanılmış.",
       },
       {
-        sentence: "The artist specialized in ephemeral installations that disappeared after a day.",
+        usage: "The artist specialized in ephemeral installations that disappeared after a day.",
         explanation:
           "Sanatçı, bir gün sonra kaybolan geçici enstalasyonlarda uzmanlaşmıştı. Burada 'ephemeral' kelimesi kasıtlı olarak kısa süreli tasarlanmış sanat eserlerini tanımlamak için kullanılmış.",
       },
     ],
-    link: "https://dictionary.cambridge.org/dictionary/english/ephemeral",
   },
   // Other word details would be updated similarly
 ]
