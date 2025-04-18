@@ -45,7 +45,7 @@ export default function WordDetail({ word, isOpen, onClose }: WordDetailProps) {
               {word.examples.map((example, idx) => (
                 <Card key={idx} className="bg-muted/50">
                   <CardContent className="pt-4">
-                    <div className="font-medium italic">"{example.usage}"</div>
+                    <div className="font-medium italic">&quot;{example.usage}&quot;</div>
                     <div className="text-muted-foreground mt-2">{example.explanation}</div>
                   </CardContent>
                 </Card>
