@@ -45,8 +45,13 @@ export default function DictionaryApp() {
 
   // Load sample data
   useEffect(() => {
-    setWords(sampleWords)
-    setFilteredWords(sampleWords)
+    const fetchWords = async () => {
+      const response = await fetch("https://wvehuw4cld.execute-api.us-east-1.amazonaws.com/dev/words")
+      const data = await response.json()
+      setWords(data)
+      setFilteredWords(data)
+    }
+    fetchWords()
   }, [])
 
   // Handle search

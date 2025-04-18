@@ -1,5 +1,5 @@
 "use client"
-import { Dialog, DialogContent, DialogHeader, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -29,8 +29,9 @@ export default function WordDetail({ word, isOpen, onClose }: WordDetailProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="flex flex-col space-y-1.5 text-center sm:text-left">
-          {/* Removed DialogTitle completely and using h2 directly */}
+        <DialogHeader>
+          {/* Add back DialogTitle for accessibility */}
+          <DialogTitle className="sr-only">{word.word}</DialogTitle>
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">{word.word}</h2>
             <Badge variant="outline" className="flex items-center gap-1">
