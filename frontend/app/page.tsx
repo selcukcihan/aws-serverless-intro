@@ -38,16 +38,30 @@ export default function DictionaryApp() {
   const [selectedWord, setSelectedWord] = useState<DetailedWord | null>(null)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isInitialLoading, setIsInitialLoading] = useState(true)
+  const [isClient, setIsClient] = useState(false)
 
   const wordsPerPage = 30
+
+  // Set client-side rendering flag
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   // Load sample data
   useEffect(() => {
     const fetchWords = async () => {
-      const response = await fetch("https://wvehuw4cld.execute-api.us-east-1.amazonaws.com/dev/words")
-      const data = await response.json()
-      setWords(data)
-      setFilteredWords(data)
+      setIsInitialLoading(true)
+      try {
+        const response = await fetch("https://wvehuw4cld.execute-api.us-east-1.amazonaws.com/dev/words")
+        const data = await response.json()
+        setWords(data)
+        setFilteredWords(data)
+      } catch (error) {
+        console.error("Error fetching words:", error)
+      } finally {
+        setIsInitialLoading(false)
+      }
     }
     fetchWords()
   }, [])
@@ -111,6 +125,36 @@ export default function DictionaryApp() {
     }
 
     return items
+  }
+
+  // Only render content on the client side
+  if (!isClient) {
+    return (
+      <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[70vh]">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-4">English Learning Dictionary</h1>
+          <div className="flex justify-center mb-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          </div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Loading screen
+  if (isInitialLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[70vh]">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-4">English Learning Dictionary</h1>
+          <div className="flex justify-center mb-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          </div>
+          <p className="text-muted-foreground">Loading dictionary data...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -182,7 +226,14 @@ export default function DictionaryApp() {
                 disabled={isLoading}
                 className="w-full"
               >
-                View Details
+                {isLoading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-primary mr-2"></div>
+                    Loading...
+                  </div>
+                ) : (
+                  "View Details"
+                )}
               </Button>
             </CardFooter>
           </Card>

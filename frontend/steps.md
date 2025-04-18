@@ -8,5 +8,7 @@ npx shadcn@latest add "https://v0.dev/chat/b/b_kFM3tBBfY5r?token=eyJhbGciOiJkaXI
 
 3. There were some errors with ThemeProvider missing, so I let v0.dev fix it and then reran the above command to update the project and overwritten existing files.
 
+4. More errors, all resolved through v0.dev
 
+5. Some changes on the UI and adjustment to the api response through cursor.
 
