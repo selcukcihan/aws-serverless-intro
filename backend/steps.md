@@ -65,6 +65,9 @@ Change the create_lambda_package.sh such that it will work for any lambda. The i
 
 6. Package the lambdas and create them on the console. Remember to edit the file and method names on lambda console.
 
+* Remember to choose the correct architecture, for instance if lambda was created as x86 and you are on mac arm architecture, then the package script should take this into account
+* Remember to use the same python version as your local setup
+
 7. Increase lambda timeout and deploy the package.
 
 8. Create the S3 bucket for json data with default settings
@@ -84,3 +87,79 @@ Change the create_lambda_package.sh such that it will work for any lambda. The i
 ```
 
 11. IAM => role => grant permission for S3
+
+12. For poller lambda, parse the input event to extract the word
+
+```
+Write an AWS lambda handler function in poller.py where it's configured to be triggered through SQS. The message in the SQS queue will be an unformatted text which will be an English word. Lambda handler should extract the word from the input event which will be a batch of words and it will iterate over and call process_word.
+```
+
+13. Create poller lambda on AWS console
+
+14. Upload the zip file after creating it with `./create_lambda_package.sh poller.py`
+
+15. Change the runtime settings to set handler as `poller.lambda_handler`
+
+16. Create an environment variable named "GOOGLE_API_KEY" on the AWS Lambda console with your Google API key.
+
+17. Create the SQS queue named "words" and configure a lambda trigger, select your poller lambda.
+
+> Error code: InvalidParameterValueException. Error message: The function execution role does not have permissions to call ReceiveMessage on SQS
+
+You need to first grant lambda permission to poll the queue (edit the lambda role's policy, add statements for S3 and SQS)
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup"
+            ],
+            "Resource": [
+                "arn:aws:logs:us-east-1:195275674349:*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:us-east-1:195275674349:log-group:/aws/lambda/poller:*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sqs:*"
+            ],
+            "Resource": [
+                "arn:aws:sqs:us-east-1:195275674349:words"
+            ]
+        },
+        {
+            "Sid": "Statement1",
+            "Effect": "Allow",
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::aws-training-app-words"
+            ]
+        }
+    ]
+}
+```
+
+18. Go to Lambda Console and edit trigger batch size, set it to 1.
+
+19. Increase Lambda timeout to 60 seconds just in case.
+
+20. Start ingesting words
+
+```bash
+aws sqs send-message --queue-url https://sqs.us-east-1.amazonaws.com/195275674349/words --message-body "purpose"
+```

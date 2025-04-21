@@ -132,6 +132,58 @@ def main():
     word = "adhere"
     meaning = process_word(word)
     print(f"Processed word: {word}")
+    print(f"Meaning: {meaning}")
+
+def lambda_handler(event, context):
+    """
+    AWS Lambda handler function that processes words from SQS messages.
+    
+    Args:
+        event: The event object containing SQS messages
+        context: The Lambda context object
+        
+    Returns:
+        dict: A response object with status code and message
+    """
+    print(f"Received event: {json.dumps(event)}")
+    
+    # Initialize response tracking
+    processed_words = []
+    failed_words = []
+    
+    # Process each record in the event
+    for record in event.get('Records', []):
+        try:
+            # Extract the word from the SQS message body
+            word = record.get('body', '').strip()
+            
+            if not word:
+                print(f"Empty word found in message: {record}")
+                continue
+                
+            print(f"Processing word: {word}")
+            
+            # Process the word
+            meaning = process_word(word)
+            processed_words.append(word)
+            print(f"Successfully processed word: {word}")
+            
+        except Exception as e:
+            print(f"Error processing word: {str(e)}")
+            failed_words.append(word)
+    
+    # Prepare response
+    response = {
+        'statusCode': 200,
+        'body': json.dumps({
+            'processed_words': processed_words,
+            'failed_words': failed_words,
+            'total_processed': len(processed_words),
+            'total_failed': len(failed_words)
+        })
+    }
+    
+    return response
 
 if __name__ == "__main__":
     main()

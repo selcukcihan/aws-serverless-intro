@@ -31,3 +31,14 @@ npx shadcn@latest add "https://v0.dev/chat/b/b_kFM3tBBfY5r?token=eyJhbGciOiJkaXI
    - The static build will be generated in the `out` directory
    - Deploy the contents of the `out` directory to your CDN
 
+7. Create another private S3 bucket and upload out directory
+
+8. Create CloudFront distribution,
+  - select "origin access control settings"
+  - select "do not enable security protections"
+
+9. After creating CloudFront distribution, copy the policy and update the bucket policy with it so CloudFront can access your bucket.
+
+10. You can now access the app at https://dc6tlmszh0od9.cloudfront.net/index.html we need an extra step to let it work with https://dc6tlmszh0od9.cloudfront.net only
+
+On the CloudFront distribution page general tab, click edit and set the default root object as index.html

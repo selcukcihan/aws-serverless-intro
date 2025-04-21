@@ -16,9 +16,16 @@ mkdir -p .lambda_package_${PACKAGE_NAME}
 
 # Copy the lambda function file to the package directory
 cp ${LAMBDA_FILE} .lambda_package_${PACKAGE_NAME}/
+cp genai.prompt .lambda_package_${PACKAGE_NAME}/
 
 # Install dependencies into the package directory
-pip install -r requirements.txt -t .lambda_package_${PACKAGE_NAME}/
+pip install \
+    --platform manylinux2014_x86_64 \
+    --python-version 3.9 \
+    --implementation cp \
+    --only-binary=:all: --upgrade \
+    -r requirements.txt \
+    -t .lambda_package_${PACKAGE_NAME}/
 
 # Create a zip file from the package directory
 cd .lambda_package_${PACKAGE_NAME}
