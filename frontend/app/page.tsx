@@ -37,7 +37,7 @@ export default function DictionaryApp() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedWord, setSelectedWord] = useState<DetailedWord | null>(null)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [loadingWords, setLoadingWords] = useState<Set<string>>(new Set())
   const [isInitialLoading, setIsInitialLoading] = useState(true)
   const [isClient, setIsClient] = useState(false)
 
@@ -85,7 +85,7 @@ export default function DictionaryApp() {
 
   // Handle word selection
   const handleWordClick = async (word: string) => {
-    setIsLoading(true)
+    setLoadingWords(prev => new Set(prev).add(word))
     try {
       const response = await fetch(`https://wvehuw4cld.execute-api.us-east-1.amazonaws.com/dev/words?word=${encodeURIComponent(word)}`)
       if (!response.ok) {
@@ -98,7 +98,11 @@ export default function DictionaryApp() {
       console.error('Error fetching word details:', error)
       // You might want to show an error message to the user here
     } finally {
-      setIsLoading(false)
+      setLoadingWords(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(word)
+        return newSet
+      })
     }
   }
 
@@ -223,10 +227,10 @@ export default function DictionaryApp() {
               <Button
                 variant="outline"
                 onClick={() => handleWordClick(word.word)}
-                disabled={isLoading}
+                disabled={loadingWords.has(word.word)}
                 className="w-full"
               >
-                {isLoading ? (
+                {loadingWords.has(word.word) ? (
                   <div className="flex items-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-primary mr-2"></div>
                     Loading...

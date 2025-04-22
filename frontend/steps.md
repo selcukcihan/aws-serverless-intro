@@ -42,3 +42,9 @@ npx shadcn@latest add "https://v0.dev/chat/b/b_kFM3tBBfY5r?token=eyJhbGciOiJkaXI
 10. You can now access the app at https://dc6tlmszh0od9.cloudfront.net/index.html we need an extra step to let it work with https://dc6tlmszh0od9.cloudfront.net only
 
 On the CloudFront distribution page general tab, click edit and set the default root object as index.html
+
+11. To create a script to deploy frontend:
+
+```
+Write a bash script that will build the frontend for production with "npm run build" and then it will upload the contents of build directory to the aws lambda bucket named "aws-training-app-hosting" in us-east-1 region. The script should also create a cloudfront distribution invalidation for "arn:aws:cloudfront::195275674349:distribution/E2JL3KGOIZRTOJ" on "/*" all resources.
+```
