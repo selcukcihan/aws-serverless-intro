@@ -1,6 +1,10 @@
 # AWS Basics & Serverless on AWS
 
-You can view the slides on https://docs.google.com/presentation/d/1yczZrcitxcGnT5NR1Ivt0V8lPDY0-084L097qhDTKuA/edit?usp=sharing
+You can view the slides on
+
+* Session 1: https://docs.google.com/presentation/d/1yczZrcitxcGnT5NR1Ivt0V8lPDY0-084L097qhDTKuA/edit?usp=sharing
+* Session 2: https://docs.google.com/presentation/d/15KXQrwhxezZuGe2UIl6lMB5wrBXeulpyLER1klIIMiM/edit?usp=sharing
+
 
 We'll use these services to create a demo application, while learning how to build serverless solutions on AWS.
 
@@ -39,7 +43,7 @@ https://v0.dev/chat/english-dictionary-app-UlcC6k13wE1
 
 #### Prompt
 ```
-Create a single page cliend-side rendered web application to serve as a dictionary when learning English.
+Create a single page client-side rendered web application to serve as a dictionary when learning English.
 The app will be read-only.
 New words will be ingested manually on the backend, so do not put any UI element to suggest the user can add words.
 The app should be read-only.
