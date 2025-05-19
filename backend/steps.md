@@ -67,6 +67,7 @@ Change the create_lambda_package.sh such that it will work for any lambda. The i
 
 * Remember to choose the correct architecture, for instance if lambda was created as x86 and you are on mac arm architecture, then the package script should take this into account
 * Remember to use the same python version as your local setup
+* See https://stackoverflow.com/questions/76650856/no-module-named-pydantic-core-pydantic-core-in-aws-lambda-though-library-is-i if you run into issues with pydantic on arm architecture
 
 7. Increase lambda timeout and deploy the package.
 
