@@ -1,3 +1,5 @@
+## Setting up the backend
+
 1. Create poller.py in backend
 
 ```
@@ -78,7 +80,7 @@ Change the create_lambda_package.sh such that it will work for any lambda. The i
 * Choose REST API
 * Create resource: words
 * Create method, lambda proxy integration
-* Also add "word" as a query string parameter with caching
+* Also add "word" as a query string parameter
 * Do not create api key
 
 10. If you invoke now you'll get 
