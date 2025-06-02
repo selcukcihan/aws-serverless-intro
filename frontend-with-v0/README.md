@@ -77,14 +77,12 @@ You can assume the backend will have two APIs:
 {
   "word": "SOME_WORD_THAT_I_STUMBLED_UPON",
   "meanings": ["MEANINGs_OF_THE_WORD_IN_TURKISH_1", "ANOTHER_LESS_FREQUENT_MEANING"],
-  "dateAdded": "the date when this word was added",
-  "usages": [
+  "examples": [
     {
-      "sentence": "An example sentence using the word",
+      "usage": "An example sentence using the word",
       "explanation": "Explanation in Turkish how it was used"
     }
-  ],
-  "link": "external link to cambridge dictionary"
+  ]
 }
 
 Since the client will have all the words in the dictionary, I want to implement a client-side search functionality.
