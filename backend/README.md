@@ -166,3 +166,36 @@ You need to first grant lambda permission to poll the queue (edit the lambda rol
 ```bash
 aws sqs send-message --queue-url https://sqs.us-east-1.amazonaws.com/195275674349/words --message-body "purpose"
 ```
+
+21. To set up a weekly words reminder, create an SNS topic and subscribe your email to it.
+
+22. Then create the lambda with this prompt
+
+```
+Write an AWS Lambda function handler that will be triggered each week. It should fetch words.json from S3 and select the last 5 words from there. For each of these words it should fetch the details from {word}/meaning.json and prepare an email to be sent with boto3 through SNS. The email should list the 5 words and their details in a nice text format with bullet points etc.
+
+Change the email content according to the input files. The files on S3 for word details look like
+
+{
+    "word": "tackle",
+    "meanings": [
+        "Ele almak",
+        "M\u00fcdahale etmek (Futbol)",
+        "Malzeme"
+    ],
+    "examples": [
+        {
+            "usage": "I'm going to tackle the problem.",
+            "explanation": "Bu c\u00fcmlede 'tackle', bir problemi ele almak, \u00e7\u00f6zmek i\u00e7in harekete ge\u00e7mek anlam\u0131nda kullan\u0131lm\u0131\u015ft\u0131r. 'Bu sorunu ele alaca\u011f\u0131m/\u00e7\u00f6zece\u011fim' \u015feklinde \u00e7evrilebilir."
+        },
+        {
+            "usage": "The defender made a clean tackle.",
+            "explanation": "Burada 'tackle', futbolda topu kapmak i\u00e7in yap\u0131lan m\u00fcdahale anlam\u0131nda kullan\u0131lm\u0131\u015ft\u0131r. 'Defans oyuncusu temiz bir m\u00fcdahale yapt\u0131' \u015feklinde \u00e7evrilebilir."
+        },
+        {
+            "usage": "Fishing tackle can be expensive.",
+            "explanation": "Burada 'tackle', bal\u0131k tutma malzemeleri anlam\u0131na gelmektedir. 'Bal\u0131k tutma malzemeleri pahal\u0131 olabilir' \u015feklinde \u00e7evrilebilir."
+        }
+    ]
+}
+```
