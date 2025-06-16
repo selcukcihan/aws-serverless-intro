@@ -46,8 +46,8 @@ def lambda_handler(event, context):
                 if "examples" in meaning_data:
                     email_content += "  Örnekler:\n"
                     for example in meaning_data["examples"]:
-                        email_content += f"    - Usage: {example['usage']}\n"
-                        email_content += f"      Explanation: {example['explanation']}\n"
+                        email_content += f"    - Kullanım: {example['usage']}\n"
+                        email_content += f"      Açıklama: {example['explanation']}\n"
                 
                 email_content += "\n"
 
@@ -62,7 +62,9 @@ def lambda_handler(event, context):
 
         # Send email through SNS
         response = sns.publish(
-            TopicArn=sns_topic_arn, Subject="Haftalık Kelime Değerlendirmesi", Message=email_content
+            TopicArn=sns_topic_arn,
+            Subject="Haftalık Kelime Değerlendirmesi",
+            Message=email_content
         )
 
         print("Email sent successfully! Response: ", response)
