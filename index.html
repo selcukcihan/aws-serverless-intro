@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary App</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .dictionary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .word-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .word-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .word-title {
+            font-size: 1.5em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .meanings-list {
+            list-style: none;
+        }
+
+        .meanings-list li {
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 16px;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .pagination button:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background-color: #357abd;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .examples-section {
+            margin-top: 20px;
+        }
+
+        .example-item {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .example-usage {
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .example-explanation {
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dictionary App</h1>
+        <div id="dictionary-grid" class="dictionary-grid"></div>
+        <div class="pagination">
+            <button id="prev-page" disabled>Previous</button>
+            <button id="next-page">Next</button>
+        </div>
+    </div>
+
+    <div id="word-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modal-word-title" class="word-title"></h2>
+            <ul id="modal-meanings" class="meanings-list"></ul>
+            <div id="examples-section" class="examples-section"></div>
+        </div>
+    </div>
+
+    <script>
+        const ITEMS_PER_PAGE = 9;
+        let currentPage = 1;
+        let allWords = [];
+
+        // DOM Elements
+        const dictionaryGrid = document.getElementById('dictionary-grid');
+        const prevButton = document.getElementById('prev-page');
+        const nextButton = document.getElementById('next-page');
+        const modal = document.getElementById('word-modal');
+        const closeButton = document.querySelector('.close-button');
+        const modalWordTitle = document.getElementById('modal-word-title');
+        const modalMeanings = document.getElementById('modal-meanings');
+        const examplesSection = document.getElementById('examples-section');
+
+        // Fetch all words
+        async function fetchWords() {
+            try {
+                const response = await fetch('https://q6bbcf1at6.execute-api.us-east-1.amazonaws.com/dev/words');
+                allWords = await response.json();
+                renderWords();
+            } catch (error) {
+                console.error('Error fetching words:', error);
+                dictionaryGrid.innerHTML = '<div class="loading">Error loading words. Please try again later.</div>';
+            }
+        }
+
+        // Fetch word details
+        async function fetchWordDetails(word) {
+            try {
+                const response = await fetch(`https://q6bbcf1at6.execute-api.us-east-1.amazonaws.com/dev/words?word=${encodeURIComponent(word)}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching word details:', error);
+                return null;
+            }
+        }
+
+        // Render words for current page
+        function renderWords() {
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const wordsToShow = allWords.slice(startIndex, endIndex);
+
+            dictionaryGrid.innerHTML = wordsToShow.map(word => `
+                <div class="word-card" onclick="showWordDetails('${word.word}')">
+                    <h3 class="word-title">${word.word}</h3>
+                    <ul class="meanings-list">
+                        ${word.meanings.map(meaning => `<li>${meaning}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+
+            // Update pagination buttons
+            prevButton.disabled = currentPage === 1;
+            nextButton.disabled = endIndex >= allWords.length;
+        }
+
+        // Show word details in modal
+        async function showWordDetails(word) {
+            const details = await fetchWordDetails(word);
+            if (!details) {
+                alert('Error loading word details. Please try again later.');
+                return;
+            }
+
+            modalWordTitle.textContent = details.word;
+            modalMeanings.innerHTML = details.meanings.map(meaning => `<li>${meaning}</li>`).join('');
+
+            if (details.examples && details.examples.length > 0) {
+                examplesSection.innerHTML = `
+                    <h3>Examples</h3>
+                    ${details.examples.map(example => `
+                        <div class="example-item">
+                            <div class="example-usage">${example.usage}</div>
+                            <div class="example-explanation">${example.explanation}</div>
+                        </div>
+                    `).join('')}
+                `;
+            } else {
+                examplesSection.innerHTML = '';
+            }
+
+            modal.style.display = 'block';
+        }
+
+        // Event Listeners
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderWords();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if ((currentPage * ITEMS_PER_PAGE) < allWords.length) {
+                currentPage++;
+                renderWords();
+            }
+        });
+
+        closeButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Initialize
+        fetchWords();
+    </script>
+</body>
+</html> 

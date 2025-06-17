@@ -1,6 +1,6 @@
 import { Word, WordDetail } from "./types";
 
-const API_BASE_URL = "https://wvehuw4cld.execute-api.us-east-1.amazonaws.com/dev/words";
+const API_BASE_URL = "https://q6bbcf1at6.execute-api.us-east-1.amazonaws.com/dev/words";
 
 export const fetchAllWords = async (): Promise<Word[]> => {
   try {
