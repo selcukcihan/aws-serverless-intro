@@ -29,8 +29,8 @@ We'll use these services to create a demo application, while learning how to bui
   * get details of a word
 * New words can be added to the system through SQS.
 * Another lambda, let's call it "sqs" lambda, polls SQS and processes new words to ingest them into the system.
-* On another S3 bucket, we store all words and their meanings in a single file named "dictionary.json"
-* And we have another type of file, this time for each word, it contains the details of that word and it's named "{word}.json"
+* On another S3 bucket, we store all words and their meanings in a single file named `words.json`
+* And we have another type of file, this time for each word, it contains the details of that word and it's named `{word}/meaning.json`
 * The "sqs" lambda uses Google's gemini API to come up with the details for a word (it's meaning, example uses etc.)
 * There's another lambda that runs weekly and summarizes the words for that week in an email sent through SNS.
 
