@@ -9,7 +9,7 @@ You can view the slides on
 * Session 4: https://docs.google.com/presentation/d/17IGjqy5UGPMnpNyJhLohCc-1d10aEAMX6w9DKemy3JA/edit?usp=sharing
 * Session 5: https://docs.google.com/presentation/d/1IPDieXDeZjoIw5l5H232MRH7IZ_si4lb7Dvk1g-11cs/edit?usp=sharing
 * Session 6: https://docs.google.com/presentation/d/14Z556Stx6nKkOw5rFmKFBJ2Ru-4mIjPVlC1r2pq8JZ0/edit?usp=sharing
-
+* Session 7: https://docs.google.com/presentation/d/171jyqGWPUmgHEEwcqRBHRHld8OTAHx8DCw74FYo_VwU/edit?usp=sharing
 
 We'll use these services to create a demo application, while learning how to build serverless solutions on AWS.
 
